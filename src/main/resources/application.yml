@@ -1,0 +1,54 @@
+# Default (global) settings
+spring:
+  profiles:
+    active: dev    # default profile; override with --spring.profiles.active=prod at runtime
+
+server:
+  port: 8081
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+---
+# Dev profile: H2 in-memory
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:h2:mem:flightdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+---
+# Prod profile: MySQL (read credentials from environment variables)
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ${JDBC_DATABASE_URL:jdbc:mysql://localhost:3306/flightdb?useSSL=false&serverTimezone=UTC}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${JDBC_DATABASE_USERNAME:your_mysql_user}
+    password: ${JDBC_DATABASE_PASSWORD:your_mysql_password}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false

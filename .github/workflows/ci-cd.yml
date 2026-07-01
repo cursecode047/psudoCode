@@ -30,7 +30,7 @@ jobs:
 
       # Optional Step 4: Upload the compiled JAR/WAR file as an artifact
       - name: Upload Build Artifact
-        uses: actions/artifacts@v4
+        uses: actions/upload-artifact@v4
         with:
           name: java-app-binary
           path: target/*.jar # Adjust if your build outputs a .war file
